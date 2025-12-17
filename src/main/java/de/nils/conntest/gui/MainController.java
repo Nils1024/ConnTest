@@ -37,6 +37,8 @@ public class MainController implements Initializable, EventListener
     private BorderPane clientBorderPaneBtn;
     @FXML
     private BorderPane serverBorderPaneBtn;
+    @FXML
+    private BorderPane settingsBorderPaneBtn;
 
     @FXML
     private TextField serverPort;
@@ -65,6 +67,8 @@ public class MainController implements Initializable, EventListener
     private AnchorPane serverPane;
     @FXML
     private AnchorPane clientPane;
+    @FXML
+    private AnchorPane settingsPane;
 
     private BorderPane previousSelectedBtn;
     private boolean serverStarted = false;
@@ -109,6 +113,12 @@ public class MainController implements Initializable, EventListener
     public void doSelectServer()
     {
         select(serverBorderPaneBtn, serverPane, "Server");
+    }
+
+    @FXML
+    public void doSelectSettings()
+    {
+        select(settingsBorderPaneBtn, settingsPane, "Settings");
     }
 
     public void select(BorderPane btn, AnchorPane contentPane, String title)
