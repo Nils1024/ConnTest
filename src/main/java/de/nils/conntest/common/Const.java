@@ -19,5 +19,13 @@ public class Const
         public static final String CONNECTION_KEY = "NewConnection";
         
         public static final String ERROR_TEXT = "ErrorText";
+
+        public static final String SETTINGS_VALUE = "SettingsValue";
+    }
+
+    public static class Settings
+    {
+        public static final String THEME_KEY = "THEME";
+        public static final String ENCODING_KEY = "ENCODING";
     }
 }

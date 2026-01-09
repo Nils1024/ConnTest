@@ -3,31 +3,50 @@ package de.nils.conntest.model;
 import de.nils.conntest.model.event.EventQueue;
 import de.nils.conntest.model.repo.ClientMessagesRepo;
 import de.nils.conntest.model.repo.ServerMessagesRepo;
+import de.nils.conntest.model.repo.SettingsRepo;
 import de.nils.conntest.model.services.ClientService;
 import de.nils.conntest.model.services.ConnectionService;
 import de.nils.conntest.model.services.ServerService;
+import de.nils.conntest.model.services.SettingsService;
 
 public class Model
 {
+    public static Model instance = null;
+
     private final ServerService serverService;
     private final ClientService clientService;
     private final ConnectionService connectionService;
+    private final SettingsService settingsService;
 
     private final ServerMessagesRepo serverMessagesRepo;
     private final ClientMessagesRepo clientMessagesRepo;
+    private final SettingsRepo settingsRepo;
 
-    public Model()
+    public static Model getModel()
+    {
+        if(instance == null)
+        {
+            instance = new Model();
+        }
+
+        return instance;
+    }
+
+    private Model()
     {
         serverService = new ServerService(this);
         clientService = new ClientService(this);
         connectionService = new ConnectionService(this);
+        settingsService = new SettingsService(this);
 
         serverMessagesRepo = new ServerMessagesRepo();
         clientMessagesRepo = new ClientMessagesRepo();
+        settingsRepo = new SettingsRepo();
 
         EventQueue.getInstance().addListener(serverService);
         EventQueue.getInstance().addListener(clientService);
         EventQueue.getInstance().addListener(connectionService);
+        EventQueue.getInstance().addListener(settingsService);
     }
 
     public ServerService getServerService()
@@ -45,6 +64,11 @@ public class Model
         return connectionService;
     }
 
+    public SettingsService getSettingsService()
+    {
+        return settingsService;
+    }
+
     public ServerMessagesRepo getServerMessagesRepo()
     {
         return serverMessagesRepo;
@@ -53,5 +77,10 @@ public class Model
     public ClientMessagesRepo getClientMessagesRepo()
     {
         return clientMessagesRepo;
+    }
+
+    public SettingsRepo getSettingsRepo()
+    {
+        return settingsRepo;
     }
 }

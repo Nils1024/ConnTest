@@ -21,10 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
-import java.util.Map;
-import java.util.Optional;
-import java.util.PriorityQueue;
-import java.util.ResourceBundle;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 public class MainController implements Initializable, EventListener
 {
@@ -70,6 +69,12 @@ public class MainController implements Initializable, EventListener
     @FXML
     private AnchorPane settingsPane;
 
+    // Settings related components
+    @FXML
+    private ChoiceBox<String> settingThemeChBox;
+    @FXML
+    private ChoiceBox<String> settingEncodingChBox;
+
     private BorderPane previousSelectedBtn;
     private boolean serverStarted = false;
     private boolean clientConnected = false;
@@ -101,6 +106,13 @@ public class MainController implements Initializable, EventListener
         clientMessages.setFocusTraversable(false);
 
         doSelectServer();
+
+        // Init settings
+        settingThemeChBox.getItems().addAll("Light", "Dark");
+        settingThemeChBox.setValue("Light");
+
+        settingEncodingChBox.getItems().addAll(Charset.availableCharsets().keySet());
+        settingEncodingChBox.setValue(StandardCharsets.US_ASCII.name());
     }
 
     @FXML
@@ -211,6 +223,28 @@ public class MainController implements Initializable, EventListener
                     new Event(EventType.CLIENT_MESSAGE_SENT,
                         System.currentTimeMillis(),
                         Map.of(Const.Event.MESSAGE_KEY, s))));
+    }
+
+    @FXML
+    public void doChangeTheme()
+    {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put(Const.Event.SETTINGS_VALUE, settingThemeChBox.getValue());
+
+        Event event = new Event(EventType.THEME_CHANGED, System.currentTimeMillis(), payload);
+
+        EventQueue.getInstance().addEvent(event);
+    }
+
+    @FXML
+    public void doChangeEncoding()
+    {
+        Map<String, Object> payload = new HashMap<>();
+        payload.put(Const.Event.SETTINGS_VALUE, settingEncodingChBox.getValue());
+
+        Event event = new Event(EventType.ENCODING_CHANGED, System.currentTimeMillis(), payload);
+
+        EventQueue.getInstance().addEvent(event);
     }
 
     @Override

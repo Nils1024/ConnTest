@@ -67,7 +67,7 @@ public class ConnectionService implements EventListener
                 {
                 	model.getClientMessagesRepo().create(
                 			new Message(MessageType.INFORMATION,
-                					"Connected to: <" + event.getData(Const.Event.CONNECTION_KEY).toString() + ">", System.currentTimeMillis(),
+                                    ("Connected to: <" + event.getData(Const.Event.CONNECTION_KEY).toString() + ">").getBytes(), System.currentTimeMillis(),
                 					null, null));
                     
                     EventQueue.getInstance().addEvent(
@@ -79,7 +79,7 @@ public class ConnectionService implements EventListener
                 {
                 	model.getServerMessagesRepo().create(
                 			new Message(MessageType.INFORMATION,
-                					"New Client: <" + event.getData(Const.Event.CONNECTION_KEY).toString() + ">", System.currentTimeMillis(),
+                                    ("New Client: <" + event.getData(Const.Event.CONNECTION_KEY).toString() + ">").getBytes(), System.currentTimeMillis(),
                 					null, null));
                     
                     EventQueue.getInstance().addEvent(
@@ -103,7 +103,7 @@ public class ConnectionService implements EventListener
                 {
                 	model.getServerMessagesRepo().create(
                 			new Message(MessageType.INFORMATION,
-                					"Disconnected Client: <" + event.getData(Const.Event.CONNECTION_KEY).toString() + ">",
+                                    ("Disconnected Client: <" + event.getData(Const.Event.CONNECTION_KEY).toString() + ">").getBytes(),
                 					System.currentTimeMillis(), null, null));
                     
                     EventQueue.getInstance().addEvent(

@@ -11,7 +11,7 @@ public class ConnTest
     {
         Thread.setDefaultUncaughtExceptionHandler(new UncaughtHandler());
 
-        new Model();
+        Model.getModel();
         new UIStart();
 
         EventQueue.getInstance().startEventQueue();
