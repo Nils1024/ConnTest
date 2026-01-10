@@ -130,7 +130,7 @@ public class ServerService implements EventListener
 
                 model.getConnectionService().sendServerMessage(
                 		new Message(MessageType.SENT,
-                				event.getData(Const.Event.MESSAGE_KEY),
+                				event.getData(Const.Event.MESSAGE_KEY).toString().getBytes(),
                 				System.currentTimeMillis(), null, null));
             }
             default ->
