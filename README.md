@@ -39,7 +39,7 @@
 git clone https://github.com/Suchti18/ConnTest.git
 ```
 ```bash
-mvn build
+mvn clean package
 ```
 
 ---
