@@ -10,27 +10,7 @@
 
 ---
 
-## ✨ Features
-
-- Operates as a **TCP server** (configurable port)
-- Operates as a **TCP client** (connect to IP + port)
-- Logs all **incoming** and **outgoing** messages
-- **Simple text-based chat interface**
-- Lightweight and easy to use
-- Great for testing socket-based applications
-
----
-
-## 🎯 Use Cases
-
-ConnTest helps verify and debug:
-- Whether a connection can be established successfully
-- If messages are sent and received as expected
-- The behavior of custom communication protocols
-
----
-
-## 🚀 Getting Started
+## How to use
 
 1. Download the latest release `.zip` file
 2. Extract and run `ConnTest.exe`
@@ -49,7 +29,7 @@ ConnTest helps verify and debug:
 
 ---
 
-## 🛠️ Building
+## Building
 
 ### Requirements
 - Java **21** or later
@@ -58,16 +38,12 @@ ConnTest helps verify and debug:
 ```bash
 git clone https://github.com/Suchti18/ConnTest.git
 ```
+```bash
+mvn build
+```
 
 ---
 
-## 🤖 AI Disclaimer
-
-AI helped in following areas:
-* README creation
-
----
-
-## 📜 License
+## License
 
 [Unlicense](https://unlicense.org)
