@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -55,7 +54,7 @@ public class Connection
                     break;
                 }
 
-                Message message = new Message(MessageType.RECEIVED, buf, System.currentTimeMillis(), this, Arrays.copyOfRange(buf, 0, read));
+                Message message = new Message(MessageType.RECEIVED, new String(buf, 0, read), System.currentTimeMillis(), this, Arrays.copyOfRange(buf, 0, read));
 
                 log.atTrace()
                     .setMessage("received <{}>")
@@ -87,7 +86,7 @@ public class Connection
 
                 log.trace("Message <{}> will be sent out", message);
 
-                out.write(Arrays.toString(message.message()));
+                out.write(message.message());
                 out.flush();
                 
                 EventQueue.getInstance().addEvent(

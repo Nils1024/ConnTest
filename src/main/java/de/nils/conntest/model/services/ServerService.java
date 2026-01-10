@@ -59,7 +59,7 @@ public class ServerService implements EventListener
 
             EventQueue.getInstance().addEvent(new Event(EventType.SERVER_STARTED, System.currentTimeMillis(), null));
             
-            model.getServerMessagesRepo().create(new Message(MessageType.INFORMATION, ("Server started on port <" + port + ">").getBytes(), System.currentTimeMillis(), null, null));
+            model.getServerMessagesRepo().create(new Message(MessageType.INFORMATION, "Server started on port <" + port + ">", System.currentTimeMillis(), null, null));
             
             EventQueue.getInstance().addEvent(new Event(EventType.SERVER_MESSAGE_RECEIVED, System.currentTimeMillis(), Map.of(Const.Event.ALL_MESSAGES_KEY, model.getServerMessagesRepo().getAll())));
         }
@@ -85,7 +85,7 @@ public class ServerService implements EventListener
             serverThread.interrupt();
             EventQueue.getInstance().addEvent(new Event(EventType.SERVER_STOPPED, System.currentTimeMillis(), null));
             
-            model.getServerMessagesRepo().create(new Message(MessageType.INFORMATION, "Server stopped".getBytes(), System.currentTimeMillis(), null, null));
+            model.getServerMessagesRepo().create(new Message(MessageType.INFORMATION, "Server stopped", System.currentTimeMillis(), null, null));
             
             EventQueue.getInstance().addEvent(new Event(EventType.SERVER_MESSAGE_RECEIVED, System.currentTimeMillis(), Map.of(Const.Event.ALL_MESSAGES_KEY, model.getServerMessagesRepo().getAll())));
     	}
@@ -130,7 +130,7 @@ public class ServerService implements EventListener
 
                 model.getConnectionService().sendServerMessage(
                 		new Message(MessageType.SENT,
-                				event.getData(Const.Event.MESSAGE_KEY).toString().getBytes(),
+                				event.getData(Const.Event.MESSAGE_KEY),
                 				System.currentTimeMillis(), null, null));
             }
             default ->

@@ -19,9 +19,9 @@ public class MessageCell extends ListCell<Message>
         super();
     }
 
-    public String getEncodedString(byte[] bytes)
+    public String getEncodedMessage(Message message)
     {
-        return new String(bytes, Charset.availableCharsets().getOrDefault(Model.instance.getSettingsRepo().get(Const.Settings.ENCODING_KEY).getValue(), StandardCharsets.US_ASCII));
+        return new String(message.rawData(), Charset.availableCharsets().getOrDefault(Model.instance.getSettingsRepo().get(Const.Settings.ENCODING_KEY).getValue(), StandardCharsets.US_ASCII));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MessageCell extends ListCell<Message>
                     HBox hBox = new HBox();
                     Label messageBox = new Label();
 
-                    messageBox.setText("-> " + getEncodedString(message.message()));
+                    messageBox.setText("-> " + getEncodedMessage(message));
                     messageBox.setTooltip(new Tooltip("Source: " + message.source() + System.lineSeparator() + "Type: " + message.messageType()));
 
                     hBox.getChildren().add(messageBox);
@@ -54,7 +54,7 @@ public class MessageCell extends ListCell<Message>
                     HBox hBox = new HBox();
                     Label messageBox = new Label();
 
-                    messageBox.setText("<- " + getEncodedString(message.message()));
+                    messageBox.setText("<- " + message.message());
                     messageBox.setTooltip(new Tooltip("Source: " + message.source() + System.lineSeparator() + "Type: " + message.messageType()));
 
                     hBox.getChildren().add(messageBox);
@@ -64,7 +64,7 @@ public class MessageCell extends ListCell<Message>
                 {
                     BorderPane borderPane = new BorderPane();
 
-                    borderPane.setCenter(new Label(getEncodedString(message.message())));
+                    borderPane.setCenter(new Label(message.message()));
 
                     setGraphic(borderPane);
                 }

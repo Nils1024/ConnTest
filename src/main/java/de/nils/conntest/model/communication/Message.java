@@ -1,8 +1,6 @@
 package de.nils.conntest.model.communication;
 
-import java.util.List;
-
-public record Message(MessageType messageType, byte[] message, long time, Connection source, byte[] rawData) implements Comparable<Message>
+public record Message(MessageType messageType, String message, long time, Connection source, byte[] rawData) implements Comparable<Message>
 {
     @Override
     public int compareTo(Message o)
