@@ -30,6 +30,9 @@ public class MainController implements Initializable, EventListener
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     @FXML
+    private BorderPane mainBorderPane;
+
+    @FXML
     private Label titleLabel;
 
     @FXML
@@ -78,6 +81,9 @@ public class MainController implements Initializable, EventListener
     private BorderPane previousSelectedBtn;
     private boolean serverStarted = false;
     private boolean clientConnected = false;
+    private String baseCSS = getClass().getResource("/fxml/styles/base.css").toExternalForm();
+    private String whiteBlueCSS = getClass().getResource("/fxml/styles/white-blue.css").toExternalForm();
+    private String whiteGreenCSS = getClass().getResource("/fxml/styles/white-green.css").toExternalForm();
 
     public MainController()
     {
@@ -108,8 +114,8 @@ public class MainController implements Initializable, EventListener
         doSelectServer();
 
         // Init settings
-        settingThemeChBox.getItems().addAll("Light", "Dark");
-        settingThemeChBox.setValue("Light");
+        settingThemeChBox.getItems().addAll("Light - Green", "Light - Blue");
+        settingThemeChBox.setValue("Light - Green");
 
         settingEncodingChBox.getItems().addAll(Charset.availableCharsets().keySet());
         settingEncodingChBox.setValue(StandardCharsets.US_ASCII.name());
@@ -234,6 +240,22 @@ public class MainController implements Initializable, EventListener
         Event event = new Event(EventType.THEME_CHANGED, System.currentTimeMillis(), payload);
 
         EventQueue.getInstance().addEvent(event);
+
+        mainBorderPane.getStylesheets().clear();
+
+        switch(settingThemeChBox.getValue())
+        {
+            case "Light - Green" ->
+            {
+                mainBorderPane.getStylesheets().addAll(baseCSS, whiteGreenCSS);
+            }
+            case "Light - Blue" ->
+            {
+                mainBorderPane.getStylesheets().addAll(baseCSS, whiteBlueCSS);
+            }
+        }
+
+        System.out.println(mainBorderPane.getStylesheets());
     }
 
     @FXML
