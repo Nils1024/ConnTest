@@ -12,8 +12,8 @@
 
 ## How to use
 
-1. Download the latest release `.zip` file
-2. Extract and run `ConnTest.exe`
+1. Download the latest release
+2. Run `ConnTest.exe` or if it is a jar file, run `java -jar ConnTest.jar`
 
 ### Server Mode
 - Enter a port number

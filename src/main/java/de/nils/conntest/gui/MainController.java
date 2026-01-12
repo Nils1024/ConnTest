@@ -81,9 +81,9 @@ public class MainController implements Initializable, EventListener
     private BorderPane previousSelectedBtn;
     private boolean serverStarted = false;
     private boolean clientConnected = false;
-    private String baseCSS = getClass().getResource("/fxml/styles/base.css").toExternalForm();
-    private String whiteBlueCSS = getClass().getResource("/fxml/styles/white-blue.css").toExternalForm();
-    private String whiteGreenCSS = getClass().getResource("/fxml/styles/white-green.css").toExternalForm();
+    private final String baseCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/base.css")).toExternalForm();
+    private final String whiteBlueCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-blue.css")).toExternalForm();
+    private final String whiteGreenCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-green.css")).toExternalForm();
 
     public MainController()
     {
@@ -245,17 +245,9 @@ public class MainController implements Initializable, EventListener
 
         switch(settingThemeChBox.getValue())
         {
-            case "Light - Green" ->
-            {
-                mainBorderPane.getStylesheets().addAll(baseCSS, whiteGreenCSS);
-            }
-            case "Light - Blue" ->
-            {
-                mainBorderPane.getStylesheets().addAll(baseCSS, whiteBlueCSS);
-            }
+            case "Light - Green" -> mainBorderPane.getStylesheets().addAll(baseCSS, whiteGreenCSS);
+            case "Light - Blue" -> mainBorderPane.getStylesheets().addAll(baseCSS, whiteBlueCSS);
         }
-
-        System.out.println(mainBorderPane.getStylesheets());
     }
 
     @FXML

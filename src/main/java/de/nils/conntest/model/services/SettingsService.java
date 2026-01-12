@@ -6,9 +6,6 @@ import de.nils.conntest.model.daos.Setting;
 import de.nils.conntest.model.event.Event;
 import de.nils.conntest.model.event.EventListener;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-
 public class SettingsService implements EventListener
 {
     private final Model model;

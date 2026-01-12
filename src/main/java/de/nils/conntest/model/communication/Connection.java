@@ -58,7 +58,7 @@ public class Connection
 
                 log.atTrace()
                     .setMessage("received <{}>")
-                    .addArgument(() -> message.message())
+                    .addArgument(message::message)
                     .log();
 
                 EventQueue.getInstance().addEvent(

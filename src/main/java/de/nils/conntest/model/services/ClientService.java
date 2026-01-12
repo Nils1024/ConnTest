@@ -23,7 +23,7 @@ public class ClientService implements EventListener
 {
     private static final Logger log = LoggerFactory.getLogger(ClientService.class);
 
-    private Model model;
+    private final Model model;
     private Socket clientSocket;
     private Connection clientConn;
 
@@ -129,10 +129,7 @@ public class ClientService implements EventListener
                 					Map.of(Const.Event.ERROR_TEXT, "Port is not parsable")));
                 }
             }
-            case STOP_CLIENT ->
-            {
-                stopClient();
-            }
+            case STOP_CLIENT -> stopClient();
             case CLIENT_MESSAGE_SENT ->
             {
             	event.mustExist(Const.Event.MESSAGE_KEY);

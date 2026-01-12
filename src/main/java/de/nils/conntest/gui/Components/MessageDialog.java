@@ -25,9 +25,7 @@ public class MessageDialog extends Dialog<String>
         TextArea textArea = new TextArea();
 
         textArea.textProperty().addListener((observable, oldValue, newValue) ->
-        {
-            sendButton.setDisable(textArea.getText().isEmpty());
-        });
+                sendButton.setDisable(textArea.getText().isEmpty()));
 
         getDialogPane().setContent(textArea);
 
