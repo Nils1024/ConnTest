@@ -3,7 +3,7 @@ package de.nils.conntest.gui;
 import de.nils.conntest.common.Const;
 import de.nils.conntest.gui.Components.ErrorAlert;
 import de.nils.conntest.gui.Components.MessageCell;
-import de.nils.conntest.gui.Components.MessageDialog;
+import de.nils.conntest.gui.Components.MessageSendDialog;
 import de.nils.conntest.gui.Components.NoSelectionModel;
 import de.nils.conntest.model.communication.Message;
 import de.nils.conntest.model.event.Event;
@@ -183,8 +183,8 @@ public class MainController implements Initializable, EventListener
     {
         log.debug("New server message button clicked");
 
-        MessageDialog messageDialog = new MessageDialog();
-        Optional<String> message = messageDialog.showAndWait();
+        MessageSendDialog messageSendDialog = new MessageSendDialog();
+        Optional<String> message = messageSendDialog.showAndWait();
 
         message.ifPresent(s ->
                 EventQueue.getInstance().addEvent(
@@ -221,8 +221,8 @@ public class MainController implements Initializable, EventListener
     {
         log.debug("New client message button clicked");
 
-        MessageDialog messageDialog = new MessageDialog();
-        Optional<String> message = messageDialog.showAndWait();
+        MessageSendDialog messageSendDialog = new MessageSendDialog();
+        Optional<String> message = messageSendDialog.showAndWait();
 
         message.ifPresent(s ->
                 EventQueue.getInstance().addEvent(
