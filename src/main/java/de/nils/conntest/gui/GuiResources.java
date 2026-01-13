@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,21 +35,15 @@ public class GuiResources
             return;
         }
 
-        try
+        try(InputStream is =
+                 Objects.requireNonNull(
+                         getClass().getResourceAsStream("/fxml/images/" + filename)
+                 ))
         {
-            Image image = new Image(
-                    Files.newInputStream(
-                            Path.of(
-                                    Objects.requireNonNull(
-                                            getClass().getResource("/fxml/images/" + filename)
-                                    ).toURI()
-                            )
-                    )
-            );
-
+            Image image = new Image(is);
             images.put(filename, image);
         }
-        catch (URISyntaxException | IOException e)
+        catch (IOException | NullPointerException e)
         {
             log.error("Failed to load image <{}>", filename, e);
         }
