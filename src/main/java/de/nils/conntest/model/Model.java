@@ -46,6 +46,7 @@ public class Model
         EventQueue.getInstance().addListener(clientService);
         EventQueue.getInstance().addListener(connectionService);
         EventQueue.getInstance().addListener(settingsService);
+        EventQueue.getInstance().addListener(portScannerService);
     }
 
     public ServerService getServerService()

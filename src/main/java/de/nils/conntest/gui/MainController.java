@@ -261,7 +261,17 @@ public class MainController implements Initializable, EventListener
         String startPort = scannerStartPort.getText();
         String endPort = scannerEndPort.getText();
 
-        System.out.println(address + " " + startPort + " " + endPort);
+        Map<String, String> payload = Map.of(
+                Const.Event.CLIENT_ADDRESS_KEY, address,
+                Const.Event.START_PORT_KEY, startPort,
+                Const.Event.END_PORT_KEY, endPort);
+
+        EventQueue.getInstance().addEvent(new Event(
+                EventType.START_PORT_SCANNER,
+                System.currentTimeMillis(),
+                payload));
+
+        scanBtn.setDisable(true);
     }
 
     @FXML
@@ -380,6 +390,7 @@ public class MainController implements Initializable, EventListener
                     }
                 });
             }
+            case PORT_SCANNER_FINISHED -> Platform.runLater(() -> scanBtn.setDisable(false));
             case ERROR ->
             {
             	event.mustExist(Const.Event.ERROR_TEXT);

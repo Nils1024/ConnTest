@@ -12,6 +12,8 @@ public class Const
         public static final String SERVER_PORT_KEY = "Port";
         public static final String CLIENT_PORT_KEY = "Port";
         public static final String CLIENT_ADDRESS_KEY = "Address";
+        public static final String START_PORT_KEY = "StartPort";
+        public static final String END_PORT_KEY = "EndPort";
 
         public static final String MESSAGE_KEY = "Message";
         public static final String ALL_MESSAGES_KEY = "AllMessages";
