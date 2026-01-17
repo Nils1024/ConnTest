@@ -4,10 +4,7 @@ import de.nils.conntest.model.event.EventQueue;
 import de.nils.conntest.model.repo.ClientMessagesRepo;
 import de.nils.conntest.model.repo.ServerMessagesRepo;
 import de.nils.conntest.model.repo.SettingsRepo;
-import de.nils.conntest.model.services.ClientService;
-import de.nils.conntest.model.services.ConnectionService;
-import de.nils.conntest.model.services.ServerService;
-import de.nils.conntest.model.services.SettingsService;
+import de.nils.conntest.model.services.*;
 
 public class Model
 {
@@ -17,6 +14,7 @@ public class Model
     private final ClientService clientService;
     private final ConnectionService connectionService;
     private final SettingsService settingsService;
+    private final PortScannerService portScannerService;
 
     private final ServerMessagesRepo serverMessagesRepo;
     private final ClientMessagesRepo clientMessagesRepo;
@@ -38,6 +36,7 @@ public class Model
         clientService = new ClientService(this);
         connectionService = new ConnectionService(this);
         settingsService = new SettingsService(this);
+        portScannerService = new PortScannerService(this);
 
         serverMessagesRepo = new ServerMessagesRepo();
         clientMessagesRepo = new ClientMessagesRepo();
@@ -67,6 +66,11 @@ public class Model
     public SettingsService getSettingsService()
     {
         return settingsService;
+    }
+
+    public PortScannerService getPortScannerService()
+    {
+        return portScannerService;
     }
 
     public ServerMessagesRepo getServerMessagesRepo()

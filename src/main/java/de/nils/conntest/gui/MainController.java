@@ -41,6 +41,8 @@ public class MainController implements Initializable, EventListener
     private BorderPane serverBorderPaneBtn;
     @FXML
     private BorderPane settingsBorderPaneBtn;
+    @FXML
+    private BorderPane portScannerBorderPaneBtn;
 
     @FXML
     private TextField serverPort;
@@ -71,6 +73,20 @@ public class MainController implements Initializable, EventListener
     private AnchorPane clientPane;
     @FXML
     private AnchorPane settingsPane;
+    @FXML
+    private AnchorPane portScannerPane;
+
+    // Port Scanner related components
+    @FXML
+    TextField scannerAddress;
+    @FXML
+    TextField scannerStartPort;
+    @FXML
+    TextField scannerEndPort;
+    @FXML
+    Button scanBtn;
+    @FXML
+    TableView<String> portScannerResultTableView;
 
     // Settings related components
     @FXML
@@ -84,6 +100,7 @@ public class MainController implements Initializable, EventListener
     private final String baseCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/base.css")).toExternalForm();
     private final String whiteBlueCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-blue.css")).toExternalForm();
     private final String whiteGreenCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-green.css")).toExternalForm();
+    private final String darkGreenCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/dark-green.css")).toExternalForm();
 
     public MainController()
     {
@@ -114,7 +131,7 @@ public class MainController implements Initializable, EventListener
         doSelectServer();
 
         // Init settings
-        settingThemeChBox.getItems().addAll("Light - Green", "Light - Blue");
+        settingThemeChBox.getItems().addAll("Light - Green", "Light - Blue", "Dark - Green");
         settingThemeChBox.setValue("Light - Green");
 
         settingEncodingChBox.getItems().addAll(Charset.availableCharsets().keySet());
@@ -131,6 +148,12 @@ public class MainController implements Initializable, EventListener
     public void doSelectServer()
     {
         select(serverBorderPaneBtn, serverPane, "Server");
+    }
+
+    @FXML
+    public void doSelectPortScanner()
+    {
+        select(portScannerBorderPaneBtn, portScannerPane, "Port Scanner");
     }
 
     @FXML
@@ -232,6 +255,16 @@ public class MainController implements Initializable, EventListener
     }
 
     @FXML
+    public void doStartPortScanner()
+    {
+        String address = scannerAddress.getText();
+        String startPort = scannerStartPort.getText();
+        String endPort = scannerEndPort.getText();
+
+        System.out.println(address + " " + startPort + " " + endPort);
+    }
+
+    @FXML
     public void doChangeTheme()
     {
         Map<String, Object> payload = new HashMap<>();
@@ -247,6 +280,7 @@ public class MainController implements Initializable, EventListener
         {
             case "Light - Green" -> mainBorderPane.getStylesheets().addAll(baseCSS, whiteGreenCSS);
             case "Light - Blue" -> mainBorderPane.getStylesheets().addAll(baseCSS, whiteBlueCSS);
+            case "Dark - Green" -> mainBorderPane.getStylesheets().addAll(baseCSS, darkGreenCSS);
         }
     }
 
