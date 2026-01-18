@@ -78,15 +78,17 @@ public class MainController implements Initializable, EventListener
 
     // Port Scanner related components
     @FXML
-    TextField scannerAddress;
+    private TextField scannerAddress;
     @FXML
-    TextField scannerStartPort;
+    private TextField scannerStartPort;
     @FXML
-    TextField scannerEndPort;
+    private TextField scannerEndPort;
     @FXML
-    Button scanBtn;
+    private Button scanBtn;
     @FXML
-    TableView<String> portScannerResultTableView;
+    private TableView<String> portScannerResultTableView;
+    @FXML
+    private Label scannerProgress;
 
     // Settings related components
     @FXML
@@ -305,6 +307,12 @@ public class MainController implements Initializable, EventListener
         EventQueue.getInstance().addEvent(event);
     }
 
+    @FXML
+    public void doClearChatHistory()
+    {
+
+    }
+
     @Override
     public void handleEvent(Event event)
     {
@@ -389,6 +397,10 @@ public class MainController implements Initializable, EventListener
                     	clientMessages.getItems().add(messages.poll());
                     }
                 });
+            }
+            case PORT_SCANNER_RESULT ->
+            {
+                portScannerResultTableView.getItems().add("Test");
             }
             case PORT_SCANNER_FINISHED -> Platform.runLater(() -> scanBtn.setDisable(false));
             case ERROR ->

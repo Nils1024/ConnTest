@@ -141,6 +141,11 @@
                               <TextField fx:id="scannerStartPort" prefHeight="26.0" prefWidth="66.0" promptText="1" />
                               <TextField fx:id="scannerEndPort" prefHeight="26.0" prefWidth="66.0" promptText="65535" />
                               <Button id="initiateBtn" fx:id="scanBtn" mnemonicParsing="false" onAction="#doStartPortScanner" text="Scan" />
+                              <Label text="0.00%" fx:id="scannerProgress">
+                                 <font>
+                                    <Font size="11.0" />
+                                 </font>
+                              </Label>
                            </children>
                         </HBox>
                         <TableView fx:id="portScannerResultTableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
@@ -185,6 +190,7 @@
                               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                            </padding>
                         </HBox>
+                        <Button id="initiateBtn" fx:id="resetBtn" mnemonicParsing="false" onAction="#doClearChatHistory" text="Clear chat history" />
                         <Pane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
                         <HBox spacing="5.0">
                            <children>
