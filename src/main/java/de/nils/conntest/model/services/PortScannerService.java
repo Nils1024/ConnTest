@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Map;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -30,8 +31,7 @@ public class PortScannerService implements EventListener
     {
         log.debug("Start port scanner for address <{}> from port <{}> to port <{}>", address, start, end);
 
-        int poolSize = 500;
-        int timeOut = 500;
+        int timeOut = 1000;
 
         ConcurrentLinkedQueue<Object> openPorts = new ConcurrentLinkedQueue<>();
 
@@ -41,7 +41,7 @@ public class PortScannerService implements EventListener
             timer.scheduleAtFixedRate(() ->
             {
                 log.debug("Open ports: {}", openPorts.size());
-            }, 0, 1000, TimeUnit.MILLISECONDS);
+            }, 1000, 1000, TimeUnit.MILLISECONDS);
 
             AtomicInteger port = new AtomicInteger(start);
             while(port.get() < end)
@@ -55,7 +55,7 @@ public class PortScannerService implements EventListener
                         socket.connect(new InetSocketAddress(address, currentPort), timeOut);
                         socket.close();
                         openPorts.add(currentPort);
-                        log.debug("Port {} is open", currentPort);
+                        log.trace("Port {} is open", currentPort);
                     }
                     catch (IOException e)
                     {
@@ -63,9 +63,16 @@ public class PortScannerService implements EventListener
                     }
                 });
             }
+
+            executorService.shutdown();
+            executorService.awaitTermination(10, TimeUnit.MINUTES);
+        }
+        catch (InterruptedException e)
+        {
+            log.error("Error while scanning ports", e);
         }
 
-        EventQueue.getInstance().addEvent(new Event(EventType.PORT_SCANNER_FINISHED, System.currentTimeMillis(), null));
+        EventQueue.getInstance().addEvent(new Event(EventType.PORT_SCANNER_FINISHED, System.currentTimeMillis(), Map.of(Const.Event.OPEN_PORTS_KEY, openPorts.stream().toList())));
     }
 
     @Override

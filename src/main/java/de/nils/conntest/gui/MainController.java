@@ -1,10 +1,7 @@
 package de.nils.conntest.gui;
 
 import de.nils.conntest.common.Const;
-import de.nils.conntest.gui.Components.ErrorAlert;
-import de.nils.conntest.gui.Components.MessageCell;
-import de.nils.conntest.gui.Components.MessageSendDialog;
-import de.nils.conntest.gui.Components.NoSelectionModel;
+import de.nils.conntest.gui.Components.*;
 import de.nils.conntest.model.communication.Message;
 import de.nils.conntest.model.event.Event;
 import de.nils.conntest.model.event.EventListener;
@@ -15,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
@@ -86,7 +84,7 @@ public class MainController implements Initializable, EventListener
     @FXML
     private Button scanBtn;
     @FXML
-    private TableView<String> portScannerResultTableView;
+    private TableView<OpenPortResult> portScannerResultTableView;
     @FXML
     private Label scannerProgress;
 
@@ -129,6 +127,12 @@ public class MainController implements Initializable, EventListener
 
         serverMessages.setFocusTraversable(false);
         clientMessages.setFocusTraversable(false);
+
+        // Port Scanner Cell Factories
+        portScannerResultTableView
+                .getColumns().getFirst().setCellValueFactory(new PropertyValueFactory<>("port"));
+
+        portScannerResultTableView.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("service"));
 
         doSelectServer();
 
@@ -400,9 +404,25 @@ public class MainController implements Initializable, EventListener
             }
             case PORT_SCANNER_RESULT ->
             {
-                portScannerResultTableView.getItems().add("Test");
+
             }
-            case PORT_SCANNER_FINISHED -> Platform.runLater(() -> scanBtn.setDisable(false));
+            case PORT_SCANNER_FINISHED ->
+            {
+                Platform.runLater(() -> scanBtn.setDisable(false));
+
+                List<Integer> openPorts = event.getData(Const.Event.OPEN_PORTS_KEY);
+
+                Platform.runLater(() ->
+                {
+                    portScannerResultTableView.getItems().clear();
+
+                    for(Integer port : openPorts)
+                    {
+                        OpenPortResult row = new OpenPortResult(port, "Test");
+                        portScannerResultTableView.getItems().add(row);
+                    }
+                });
+            }
             case ERROR ->
             {
             	event.mustExist(Const.Event.ERROR_TEXT);
