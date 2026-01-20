@@ -18,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -94,13 +96,14 @@ public class MainController implements Initializable, EventListener
     @FXML
     private ChoiceBox<String> settingEncodingChBox;
 
-    private BorderPane previousSelectedBtn;
-    private boolean serverStarted = false;
-    private boolean clientConnected = false;
     private final String baseCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/base.css")).toExternalForm();
+    private final Map<String, String> themes = new HashMap<>();
     private final String whiteBlueCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-blue.css")).toExternalForm();
     private final String whiteGreenCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-green.css")).toExternalForm();
     private final String darkGreenCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/dark-green.css")).toExternalForm();
+    private BorderPane previousSelectedBtn;
+    private boolean serverStarted = false;
+    private boolean clientConnected = false;
 
     public MainController()
     {
@@ -131,14 +134,30 @@ public class MainController implements Initializable, EventListener
         // Port Scanner Cell Factories
         portScannerResultTableView
                 .getColumns().getFirst().setCellValueFactory(new PropertyValueFactory<>("port"));
-
-        portScannerResultTableView.getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("service"));
+        portScannerResultTableView
+                .getColumns().get(1).setCellValueFactory(new PropertyValueFactory<>("service"));
 
         doSelectServer();
 
         // Init settings
-        settingThemeChBox.getItems().addAll("Light - Green", "Light - Blue", "Dark - Green");
-        settingThemeChBox.setValue("Light - Green");
+        try(InputStream in = getClass().getResourceAsStream("/settings.properties"))
+        {
+            Properties settings = new Properties();
+            settings.load(in);
+
+            for(int i = 0; settings.containsKey("de.nils.conntest.theme." + i + ".name"); i++)
+            {
+                themes.put(settings.getProperty("de.nils.conntest.theme." + i + ".name"),
+                        Objects.requireNonNull(getClass().getResource("/fxml/styles/" + settings.getProperty("de.nils.conntest.theme." + i + ".file"))).toExternalForm());
+            }
+        }
+        catch (IOException e)
+        {
+            log.error("Failed to load settings.properties", e);
+        }
+
+        settingThemeChBox.getItems().addAll(themes.keySet());
+        settingThemeChBox.setValue(themes.keySet().stream().findFirst().orElse("NONE"));
 
         settingEncodingChBox.getItems().addAll(Charset.availableCharsets().keySet());
         settingEncodingChBox.setValue(StandardCharsets.US_ASCII.name());
@@ -291,13 +310,7 @@ public class MainController implements Initializable, EventListener
         EventQueue.getInstance().addEvent(event);
 
         mainBorderPane.getStylesheets().clear();
-
-        switch(settingThemeChBox.getValue())
-        {
-            case "Light - Green" -> mainBorderPane.getStylesheets().addAll(baseCSS, whiteGreenCSS);
-            case "Light - Blue" -> mainBorderPane.getStylesheets().addAll(baseCSS, whiteBlueCSS);
-            case "Dark - Green" -> mainBorderPane.getStylesheets().addAll(baseCSS, darkGreenCSS);
-        }
+        mainBorderPane.getStylesheets().addAll(baseCSS, themes.getOrDefault(settingThemeChBox.getValue(), ""));
     }
 
     @FXML
@@ -322,86 +335,42 @@ public class MainController implements Initializable, EventListener
     {
         switch(event.eventType())
         {
-            case SERVER_STARTED ->
+            case SERVER_STARTED -> Platform.runLater(() ->
             {
-                Platform.runLater(() ->
-                {
-                    serverPort.setDisable(true);
-                    serverStarted = true;
-                    serverStartBtn.setText("Stop");
-                    serverStartBtn.setId("cancelBtn");
-                    serverMessageBtn.setDisable(false);
-                });
-            }
-            case SERVER_STOPPED ->
+                serverPort.setDisable(true);
+                serverStarted = true;
+                serverStartBtn.setText("Stop");
+                serverStartBtn.setId("cancelBtn");
+                serverMessageBtn.setDisable(false);
+            });
+            case SERVER_STOPPED -> Platform.runLater(() ->
             {
-                Platform.runLater(() ->
-                {
-                    serverPort.setDisable(false);
-                    serverStarted = false;
-                    serverStartBtn.setText("Start");
-                    serverStartBtn.setId("initiateBtn");
-                    serverMessageBtn.setDisable(true);
-                });
-            }
-            case SERVER_MESSAGE_RECEIVED ->
+                serverPort.setDisable(false);
+                serverStarted = false;
+                serverStartBtn.setText("Start");
+                serverStartBtn.setId("initiateBtn");
+                serverMessageBtn.setDisable(true);
+            });
+            case SERVER_MESSAGE_RECEIVED -> addMessageToListView(event, serverMessages);
+            case CLIENT_STARTED -> Platform.runLater(() ->
             {
-                event.mustExist(Const.Event.ALL_MESSAGES_KEY);
-
-                PriorityQueue<Message> messages = new PriorityQueue<>();
-                messages.addAll(event.getData(Const.Event.ALL_MESSAGES_KEY));
-
-                Platform.runLater(() ->
-                {
-                    serverMessages.getItems().clear();
-                    
-                    while(!messages.isEmpty())
-                    {
-                    	serverMessages.getItems().add(messages.poll());
-                    }
-                });
-            }
-            case CLIENT_STARTED ->
+                clientAddress.setDisable(true);
+                clientPort.setDisable(true);
+                clientConnected = true;
+                clientConnectBtn.setText("Disconnect");
+                clientConnectBtn.setId("cancelBtn");
+                clientMessageBtn.setDisable(false);
+            });
+            case CLIENT_STOPPED -> Platform.runLater(() ->
             {
-                Platform.runLater(() ->
-                {
-                    clientAddress.setDisable(true);
-                    clientPort.setDisable(true);
-                    clientConnected = true;
-                    clientConnectBtn.setText("Disconnect");
-                    clientConnectBtn.setId("cancelBtn");
-                    clientMessageBtn.setDisable(false);
-                });
-            }
-            case CLIENT_STOPPED ->
-            {
-                Platform.runLater(() ->
-                {
-                    clientAddress.setDisable(false);
-                    clientPort.setDisable(false);
-                    clientConnected = false;
-                    clientConnectBtn.setText("Connect");
-                    clientConnectBtn.setId("initiateBtn");
-                    clientMessageBtn.setDisable(true);
-                });
-            }
-            case CLIENT_MESSAGE_RECEIVED ->
-            {
-                event.mustExist(Const.Event.ALL_MESSAGES_KEY);
-
-                PriorityQueue<Message> messages = new PriorityQueue<>();
-                messages.addAll(event.getData(Const.Event.ALL_MESSAGES_KEY));
-
-                Platform.runLater(() ->
-                {
-                    clientMessages.getItems().clear();
-                    
-                    while(!messages.isEmpty())
-                    {
-                    	clientMessages.getItems().add(messages.poll());
-                    }
-                });
-            }
+                clientAddress.setDisable(false);
+                clientPort.setDisable(false);
+                clientConnected = false;
+                clientConnectBtn.setText("Connect");
+                clientConnectBtn.setId("initiateBtn");
+                clientMessageBtn.setDisable(true);
+            });
+            case CLIENT_MESSAGE_RECEIVED -> addMessageToListView(event, clientMessages);
             case PORT_SCANNER_RESULT ->
             {
 
@@ -437,5 +406,23 @@ public class MainController implements Initializable, EventListener
             {
             }
         }
+    }
+
+    private void addMessageToListView(Event event, ListView<Message> listView)
+    {
+        event.mustExist(Const.Event.ALL_MESSAGES_KEY);
+
+        PriorityQueue<Message> messages = new PriorityQueue<>();
+        messages.addAll(event.getData(Const.Event.ALL_MESSAGES_KEY));
+
+        Platform.runLater(() ->
+        {
+            listView.getItems().clear();
+
+            while(!messages.isEmpty())
+            {
+                listView.getItems().add(messages.poll());
+            }
+        });
     }
 }
