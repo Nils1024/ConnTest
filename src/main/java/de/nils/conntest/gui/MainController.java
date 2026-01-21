@@ -379,15 +379,16 @@ public class MainController implements Initializable, EventListener
             {
                 Platform.runLater(() -> scanBtn.setDisable(false));
 
-                List<Integer> openPorts = event.getData(Const.Event.OPEN_PORTS_KEY);
+                Map<Integer, String> openPorts = event.getData(Const.Event.OPEN_PORTS_KEY);
+                System.out.println(openPorts);
 
                 Platform.runLater(() ->
                 {
                     portScannerResultTableView.getItems().clear();
 
-                    for(Integer port : openPorts)
+                    for(Map.Entry<Integer, String> openPort : openPorts.entrySet())
                     {
-                        OpenPortResult row = new OpenPortResult(port, "Test");
+                        OpenPortResult row = new OpenPortResult(openPort.getKey(), openPort.getValue());
                         portScannerResultTableView.getItems().add(row);
                     }
                 });
