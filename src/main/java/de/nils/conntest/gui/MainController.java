@@ -15,9 +15,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -239,6 +241,17 @@ public class MainController implements Initializable, EventListener
     }
 
     @FXML
+    public void doExportServerMessage()
+    {
+        log.debug("Export server message button clicked");
+        FileChooser fileChooser = new FileChooser();
+
+        File destFile = fileChooser.showSaveDialog(mainBorderPane.getScene().getWindow());
+
+        System.out.println(destFile);
+    }
+
+    @FXML
     public void doStartClient()
     {
         if(clientConnected)
@@ -274,6 +287,12 @@ public class MainController implements Initializable, EventListener
                     new Event(EventType.CLIENT_MESSAGE_SENT,
                         System.currentTimeMillis(),
                         Map.of(Const.Event.MESSAGE_KEY, s))));
+    }
+
+    @FXML
+    public void doExportClientMessage()
+    {
+        log.debug("Export client message button clicked");
     }
 
     @FXML

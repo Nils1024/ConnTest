@@ -12,6 +12,7 @@ import de.nils.conntest.model.event.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.BindException;
 import java.util.Map;
@@ -97,6 +98,14 @@ public class ServerService implements EventListener
     public boolean isServerRunning()
     {
         return serverThread != null && serverThread.isAlive();
+    }
+
+    private void saveMessagesToFile(File file)
+    {
+        for(Message message : model.getServerMessagesRepo().getAll())
+        {
+            //TODO: Implement
+        }
     }
 
     @Override
