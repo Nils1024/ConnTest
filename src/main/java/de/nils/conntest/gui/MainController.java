@@ -98,9 +98,6 @@ public class MainController implements Initializable, EventListener
 
     private final String baseCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/base.css")).toExternalForm();
     private final Map<String, String> themes = new HashMap<>();
-    private final String whiteBlueCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-blue.css")).toExternalForm();
-    private final String whiteGreenCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/white-green.css")).toExternalForm();
-    private final String darkGreenCSS = Objects.requireNonNull(getClass().getResource("/fxml/styles/dark-green.css")).toExternalForm();
     private BorderPane previousSelectedBtn;
     private boolean serverStarted = false;
     private boolean clientConnected = false;
@@ -297,6 +294,7 @@ public class MainController implements Initializable, EventListener
                 payload));
 
         scanBtn.setDisable(true);
+        scannerProgress.setVisible(true);
     }
 
     @FXML
@@ -391,6 +389,8 @@ public class MainController implements Initializable, EventListener
                         OpenPortResult row = new OpenPortResult(openPort.getKey(), openPort.getValue());
                         portScannerResultTableView.getItems().add(row);
                     }
+
+                    scannerProgress.setVisible(false);
                 });
             }
             case ERROR ->

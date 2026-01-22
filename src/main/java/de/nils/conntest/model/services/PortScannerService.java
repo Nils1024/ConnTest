@@ -11,21 +11,17 @@ import de.nils.conntest.model.event.EventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class PortScannerService implements EventListener
 {
-    private static final Logger log = LoggerFactory.getLogger(ClientService.class);
+        private static final Logger log = LoggerFactory.getLogger(PortScannerService.class);
 
     private final Model model;
     private final Map<Integer, String> knownPorts;
@@ -57,12 +53,17 @@ public class PortScannerService implements EventListener
         try(ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
             ScheduledExecutorService timer = Executors.newSingleThreadScheduledExecutor())
         {
+            AtomicInteger port = new AtomicInteger(start);
+
             timer.scheduleAtFixedRate(() ->
             {
-                log.debug("Open ports: {}", openPorts.size());
-            }, 1000, 1000, TimeUnit.MILLISECONDS);
+                float percentage = 1.23f;
+                EventQueue.getInstance().addEvent(new Event(
+                        EventType.PORT_SCANNER_RESULT,
+                        System.currentTimeMillis(),
+                        Map.of(Const.Event.PORT_SCANNER_PROGRESS_KEY, percentage)));
+            }, 1000, 2000, TimeUnit.MILLISECONDS);
 
-            AtomicInteger port = new AtomicInteger(start);
             while(port.get() < end)
             {
                 final int currentPort = port.getAndIncrement();
@@ -78,11 +79,12 @@ public class PortScannerService implements EventListener
                     }
                     catch (IOException e)
                     {
-                        log.trace("Port {} is closed", currentPort);
+                        //log.trace("Port {} is closed", currentPort);
                     }
                 });
             }
 
+            timer.shutdown();
             executorService.shutdown();
             executorService.awaitTermination(10, TimeUnit.MINUTES);
         }

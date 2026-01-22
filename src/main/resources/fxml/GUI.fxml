@@ -141,7 +141,7 @@
                               <TextField fx:id="scannerStartPort" prefHeight="26.0" prefWidth="66.0" promptText="1" />
                               <TextField fx:id="scannerEndPort" prefHeight="26.0" prefWidth="66.0" promptText="65535" />
                               <Button id="initiateBtn" fx:id="scanBtn" mnemonicParsing="false" onAction="#doStartPortScanner" text="Scan" />
-                              <Label text="0.00%" fx:id="scannerProgress">
+                              <Label text="0.00%" fx:id="scannerProgress" visible="false">
                                  <font>
                                     <Font size="11.0" />
                                  </font>

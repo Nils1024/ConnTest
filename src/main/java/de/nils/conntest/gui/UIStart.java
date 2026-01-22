@@ -76,10 +76,7 @@ public class UIStart
 
                 PopupMenu popupMenu = new PopupMenu();
                 MenuItem exitItem = new MenuItem("Exit");
-                exitItem.addActionListener(event ->
-                {
-                    System.exit(0);
-                });
+                exitItem.addActionListener(event -> System.exit(0));
 
                 MenuItem showItem = new MenuItem("Show");
                 showItem.addActionListener(event ->

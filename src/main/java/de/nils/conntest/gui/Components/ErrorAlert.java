@@ -12,7 +12,7 @@ public class ErrorAlert extends Alert
 		super(AlertType.ERROR);
 		
 		setTitle("Error");
-		setHeaderText("An error occured");
+		setHeaderText("An error occurred");
 		setContentText(errorText);
 		
 		// Set Icon

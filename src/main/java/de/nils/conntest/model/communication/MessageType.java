@@ -4,5 +4,5 @@ public enum MessageType
 {
     RECEIVED,
     SENT,
-    INFORMATION;
+    INFORMATION
 }
