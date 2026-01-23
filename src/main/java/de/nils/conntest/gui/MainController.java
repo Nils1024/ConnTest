@@ -2,6 +2,7 @@ package de.nils.conntest.gui;
 
 import de.nils.conntest.common.Const;
 import de.nils.conntest.gui.Components.*;
+import de.nils.conntest.model.Model;
 import de.nils.conntest.model.communication.Message;
 import de.nils.conntest.model.event.Event;
 import de.nils.conntest.model.event.EventListener;
@@ -339,7 +340,20 @@ public class MainController implements Initializable, EventListener
     @FXML
     public void doClearChatHistory()
     {
-        //TODO: Implement
+        for(Message message : Model.getModel().getServerMessagesRepo().getAll())
+        {
+            Model.getModel().getServerMessagesRepo().delete(message);
+        }
+
+        for(Message message : Model.getModel().getClientMessagesRepo().getAll())
+        {
+            Model.getModel().getClientMessagesRepo().delete(message);
+        }
+
+        serverMessages.getItems().clear();
+        clientMessages.getItems().clear();
+
+        portScannerResultTableView.getItems().clear();
     }
 
     @Override
