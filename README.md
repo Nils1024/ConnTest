@@ -34,9 +34,13 @@
 ### Requirements
 - Java **21** or later
 - Git
+- Maven
 
 ```bash
 git clone https://github.com/Suchti18/ConnTest.git
+```
+```bash
+cd ConnTest/
 ```
 ```bash
 mvn clean package
