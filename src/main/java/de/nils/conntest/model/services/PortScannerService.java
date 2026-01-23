@@ -148,7 +148,25 @@ public class PortScannerService implements EventListener
     {
         switch(event.eventType())
         {
-            case START_PORT_SCANNER -> scan(event.getData(Const.Event.CLIENT_ADDRESS_KEY), Integer.parseInt(event.getData(Const.Event.START_PORT_KEY)), Integer.parseInt(event.getData(Const.Event.END_PORT_KEY)));
+            case START_PORT_SCANNER ->
+            {
+                try
+                {
+                    scan(event.getData(Const.Event.CLIENT_ADDRESS_KEY), Integer.parseInt(event.getData(Const.Event.START_PORT_KEY)), Integer.parseInt(event.getData(Const.Event.END_PORT_KEY)));
+                }
+                catch(NumberFormatException e)
+                {
+                    EventQueue.getInstance().addEvent(
+                            new Event(EventType.ERROR,
+                                    System.currentTimeMillis(),
+                                    Map.of(Const.Event.ERROR_TEXT, "Please fill everything correctly")));
+                    EventQueue.getInstance().addEvent(
+                            new Event(EventType.PORT_SCANNER_FINISHED,
+                                    System.currentTimeMillis(),
+                                    Map.of(Const.Event.OPEN_PORTS_KEY,
+                                            Map.of())));
+                }
+            }
         }
     }
 }
