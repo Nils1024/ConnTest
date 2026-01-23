@@ -18,6 +18,8 @@ public class Const
 
         public static final String PORT_SCANNER_PROGRESS_KEY = "Progress";
 
+        public static final String EXPORT_DEST_FILE_KEY = "ExportFile";
+
         public static final String MESSAGE_KEY = "Message";
         public static final String ALL_MESSAGES_KEY = "AllMessages";
 

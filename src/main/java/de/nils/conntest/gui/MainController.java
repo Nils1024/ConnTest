@@ -243,12 +243,7 @@ public class MainController implements Initializable, EventListener
     @FXML
     public void doExportServerMessage()
     {
-        log.debug("Export server message button clicked");
-        FileChooser fileChooser = new FileChooser();
-
-        File destFile = fileChooser.showSaveDialog(mainBorderPane.getScene().getWindow());
-
-        System.out.println(destFile);
+        sendExportEvent(EventType.SERVER_EXPORT);
     }
 
     @FXML
@@ -292,7 +287,7 @@ public class MainController implements Initializable, EventListener
     @FXML
     public void doExportClientMessage()
     {
-        log.debug("Export client message button clicked");
+        sendExportEvent(EventType.CLIENT_EXPORT);
     }
 
     @FXML
@@ -344,7 +339,7 @@ public class MainController implements Initializable, EventListener
     @FXML
     public void doClearChatHistory()
     {
-
+        //TODO: Implement
     }
 
     @Override
@@ -426,6 +421,18 @@ public class MainController implements Initializable, EventListener
             {
             }
         }
+    }
+
+    private void sendExportEvent(EventType eventType)
+    {
+        FileChooser fileChooser = new FileChooser();
+
+        File destFile = fileChooser.showSaveDialog(mainBorderPane.getScene().getWindow());
+
+        EventQueue.getInstance().addEvent(new Event(
+                eventType,
+                System.currentTimeMillis(),
+                Map.of(Const.Event.EXPORT_DEST_FILE_KEY, destFile)));
     }
 
     private void addMessageToListView(Event event, ListView<Message> listView)

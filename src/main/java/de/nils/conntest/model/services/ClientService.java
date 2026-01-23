@@ -136,9 +136,6 @@ public class ClientService implements EventListener
 
                 model.getConnectionService().sendClientMessage(new Message(MessageType.SENT, event.getData(Const.Event.MESSAGE_KEY), System.currentTimeMillis(), clientConn, ((String) event.getData(Const.Event.MESSAGE_KEY)).getBytes()));
             }
-            default ->
-            {
-            }
         }
     }
 }

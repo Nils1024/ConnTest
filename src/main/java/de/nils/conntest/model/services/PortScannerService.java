@@ -46,6 +46,46 @@ public class PortScannerService implements EventListener
     {
         log.debug("Start port scanner for address <{}> from port <{}> to port <{}>", address, start, end);
 
+        if(start > end)
+        {
+            EventQueue.getInstance().addEvent(
+                    new Event(EventType.ERROR,
+                            System.currentTimeMillis(),
+                            Map.of(Const.Event.ERROR_TEXT, "The start port is bigger than the end port")));
+            EventQueue.getInstance().addEvent(
+                    new Event(EventType.PORT_SCANNER_FINISHED,
+                            System.currentTimeMillis(),
+                            Map.of(Const.Event.OPEN_PORTS_KEY,
+                                    Map.of())));
+            return;
+        }
+        else if(end > 65535)
+        {
+            EventQueue.getInstance().addEvent(
+                    new Event(EventType.ERROR,
+                            System.currentTimeMillis(),
+                            Map.of(Const.Event.ERROR_TEXT, "The end port is bigger than 65535")));
+            EventQueue.getInstance().addEvent(
+                    new Event(EventType.PORT_SCANNER_FINISHED,
+                            System.currentTimeMillis(),
+                            Map.of(Const.Event.OPEN_PORTS_KEY,
+                                    Map.of())));
+            return;
+        }
+        else if(start < 1)
+        {
+            EventQueue.getInstance().addEvent(
+                    new Event(EventType.ERROR,
+                            System.currentTimeMillis(),
+                            Map.of(Const.Event.ERROR_TEXT, "The start port is smaller than 1")));
+            EventQueue.getInstance().addEvent(
+                    new Event(EventType.PORT_SCANNER_FINISHED,
+                            System.currentTimeMillis(),
+                            Map.of(Const.Event.OPEN_PORTS_KEY,
+                                    Map.of())));
+            return;
+        }
+
         int timeOut = 1000;
 
         ConcurrentLinkedQueue<Integer> openPorts = new ConcurrentLinkedQueue<>();
@@ -79,7 +119,7 @@ public class PortScannerService implements EventListener
                     }
                     catch (IOException e)
                     {
-                        //log.trace("Port {} is closed", currentPort);
+                        log.trace("Port {} is closed", currentPort);
                     }
                 });
             }

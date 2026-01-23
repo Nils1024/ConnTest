@@ -15,6 +15,7 @@ public class Model
     private final ConnectionService connectionService;
     private final SettingsService settingsService;
     private final PortScannerService portScannerService;
+    private final FileService fileService;
 
     private final ServerMessagesRepo serverMessagesRepo;
     private final ClientMessagesRepo clientMessagesRepo;
@@ -37,6 +38,7 @@ public class Model
         connectionService = new ConnectionService(this);
         settingsService = new SettingsService(this);
         portScannerService = new PortScannerService(this);
+        fileService = new FileService(this);
 
         serverMessagesRepo = new ServerMessagesRepo();
         clientMessagesRepo = new ClientMessagesRepo();
@@ -47,6 +49,7 @@ public class Model
         EventQueue.getInstance().addListener(connectionService);
         EventQueue.getInstance().addListener(settingsService);
         EventQueue.getInstance().addListener(portScannerService);
+        EventQueue.getInstance().addListener(fileService);
     }
 
     public ServerService getServerService()
@@ -72,6 +75,11 @@ public class Model
     public PortScannerService getPortScannerService()
     {
         return portScannerService;
+    }
+
+    public FileService getFileService()
+    {
+        return fileService;
     }
 
     public ServerMessagesRepo getServerMessagesRepo()
